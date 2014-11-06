@@ -105,4 +105,9 @@ function getServer() {
 	return $base_url;
 }
 
+/*select all objects*/
+function selectAll($tableName, $condition) {
+	$db = M($tableName);
+	return $db->where($condition)->find();
+}
 ?>

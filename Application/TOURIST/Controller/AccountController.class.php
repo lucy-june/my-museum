@@ -43,7 +43,7 @@ class AccountController extends Controller {
         }
     }
 
-    //http://localhost:8001/Museum/TOURIST/Account/login?username=test_user&password=147258
+    //http://localhost:8001/Museum/index.php/TOURIST/Account/login?username=test_user&password=147258
     public function login($username = null, $password = null){
         if(IS_GET){
             $user_table = M('normal_visiter');
@@ -60,18 +60,16 @@ class AccountController extends Controller {
             }
 
             $data = array(
-                'uid'              => $normal_user['NV_ID_INT_PK'],
-                'login'           => array('exp', '`login`+1'),
-                'last_login_time' => NOW_TIME,
-                'last_login_ip'   => get_client_ip(),
+                'NV_ID_INT_PK'              => $normal_user['NV_ID_INT_PK'],
+                'NV_LAST_LOGIN_TIMESTAMP' 	=> date('Y-m-d H:i:s',NOW_TIME),
             );
-//             $db->save($data);
+            $user_table->save($data);
 
             /* 记录登录SESSION和COOKIES */
             $auth = array(
                 'uid'             => $normal_user['NV_ID_INT_PK'],
                 'username'        => $normal_user['NV_NICKNAME_TX'],
-                'last_login_time' => $data['last_login_time'],
+                'NV_LAST_LOGIN_TIMESTAMP' => $data['last_login_time'],
             );
             session('user', $auth);
             echo JSON($normal_user);
