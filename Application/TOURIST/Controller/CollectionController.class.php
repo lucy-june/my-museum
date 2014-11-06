@@ -8,20 +8,11 @@ class CollectionController extends Controller {
 
     //http://localhost:89/Museum/Home/Collection/myCollection?uid=2
     public function myCollection($uid){
-        $db = M('collection');
-        $map['uid'] = $uid;
-        $data = $db->where($map)->select();
-
-        $result=array();
-        foreach($data as $record){
-            $result[]=mb_convert_encoding($record["exhibitpath"],'gb2312','utf-8' );
-        }
-
-        echo(JSON($result));
     }
 
     //http://localhost:89/Museum/Home/Collection/myCollectionDetail?uid=2
     public function myCollectionDetail($uid){
+    	//TODO:返回所有item，简介，图片
         $db = M('collection');
         $map['uid'] = $uid;
         $data = $db->where($map)->select();
@@ -41,12 +32,6 @@ class CollectionController extends Controller {
 
     //http://localhost:89/Museum/Home/Collection/addCollection?uid=2&exhibitpath=展馆展品数据资料/展品信息/
     public function addCollection($uid,$exhibitpath){
-        $db = M('collection');
-        $data = array(
-            'uid'              => $uid,
-            'exhibitpath'              => $exhibitpath,
-        );
-        $ret=$db->add($data);
-        echo $ret;
+    	//TODO: get collections
     }
 }

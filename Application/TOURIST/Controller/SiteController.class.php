@@ -31,18 +31,16 @@ class SiteController extends Controller {
     
     
     
-    //http://localhost:8001/museum/index.php/TOURIST/Home/scrollImgs?vs_id=1
+    //http://localhost:8001/museum/index.php/TOURIST/Site/scrollImgs?vs_id=1
     public function scrollImgs($vs_id){
     	if(IS_GET) {
+    		//TODO:返回展品图，名称，id
     		$base_url =getServer().'SITE/ID_'.$vs_id;
     		$condition['VS_ID_INT_PK'] = $vs_id;
     		$site = selectAll('visit_site',$condition);
     		$imgs = explode("$",$site['VS_PIC_PATH_TX']);
-    		$i = 0;
-    		foreach ($imgs as $img) {
-    			$result['img'.$i] = $base_url.'/'.$img;
-    			$i++;
-    		}
+    		$result['base_url'] = $base_url.'/';
+    		$result['imgs_array'] = $imgs;
     		echo JSON($result);
     	}
     	return JSON($result);
@@ -53,7 +51,7 @@ class SiteController extends Controller {
     	$base_url =getServer().'SITE/start.mp3';
     	echo $base_url;
     }
-    
+   
     public function test() {
     
     	//     	header("content-Type: text/html; charset=Utf-8");

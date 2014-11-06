@@ -69,7 +69,7 @@ class AccountController extends Controller {
             $auth = array(
                 'uid'             => $normal_user['NV_ID_INT_PK'],
                 'username'        => $normal_user['NV_NICKNAME_TX'],
-                'NV_LAST_LOGIN_TIMESTAMP' => $data['last_login_time'],
+                'last_login_time' => $data['NV_LAST_LOGIN_TIMESTAMP'],
             );
             session('user', $auth);
             echo JSON($normal_user);
@@ -81,15 +81,20 @@ class AccountController extends Controller {
     }
 
     //http://localhost:89/Museum/Home/Account/logout
-    public function logout(){
+    public function logout() {
         if(is_login()){
             session('user', null);
             session('[destroy]');
             echo 'log out succeed';
             $this->success('退出成功！', U('login'));
-        } else {
+        } else { 	
             $this->redirect('login');
         }
     }
-
+    
+    public function test() {
+    	$value = session('user');
+    	echo JSON($value);
+    }
+ 
 }

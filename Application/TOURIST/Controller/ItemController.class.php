@@ -1,7 +1,7 @@
 <?php
 namespace TOURIST\Controller;
 use Think\Controller;
-class ExhibitController extends Controller {
+class ItemController extends Controller {
     public function index(){
         $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px }</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>[ 您现在访问的是Home模块的Index控制器 ]</div><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
     }
@@ -52,5 +52,20 @@ class ExhibitController extends Controller {
     //http://localhost:89/Museum/Home/Exhibit/exhibitComment?path=展馆展品数据资料/展品信息/第一层/第一展厅/明清木具/明朝藤椅/
     public function exhibitComment($path){
         echo getBase().urlencode(mb_convert_encoding($path."解说词.txt",'gb2312','utf-8' ));
+    }
+    
+    /**
+     * return all the items that belongs to one tree node
+     * @param vs_id:场馆ID
+     * @param tree_id:树节点ID,null表示搜索场馆全部item
+     */
+    public function getItems($vs_id,$tree_id=null) {
+    	//TODO:返回展品命，备注，图片
+    }
+    /**
+     * return the details of one item
+     */
+    public function itemDetail($item_id) {
+    	//TODO: return the details of one item
     }
 }
