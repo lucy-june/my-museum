@@ -6,9 +6,17 @@ class AccountController extends Controller {
         $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px }</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>[ 您现在访问的是Home模块的Index控制器 ]</div><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
     }
 
-    //http://localhost:8001/Museum/index.php/TOURIST/Account/signin?username=test_user1&password=147258&tel=13112345678&nickname=测试用户&email=new@dl.com
+    
+    /**
+     * 注册
+     * localhost:8001/museum/index.php/TOURIST/Account/signin?username=test_user1&password=147258&tel=13112345678&nickname=测试用户&email=new@dl.com
+     * @param unknown $username:	必须
+     * @param unknown $password:	必须
+     * @param unknown $email:	必须
+     * @param string $tel:	非必须
+     * @param string $nickname:	非必须
+     */
     public function signin($username,$password,$email,$tel=null,$nickname=null){
-    	header("Content-Type:text/html;charset=utf-8");
         if(IS_GET){
             $user_table = M('normal_visiter');
             $condition['NV_NAME_TX'] = $username;
@@ -28,11 +36,6 @@ class AccountController extends Controller {
                 'NV_NICKNAME_TX'=> $nickname,
                 'NV_STATE_TX_FX'=> 'ACT',
             );
-//            foreach( $data as $key=>$value)
-//            {
-//                echo $key."=>".$value;
-//                echo '<br />';
-//            }
             $ret=$user_table->add($data);
             $condition['NV_ID_INT_PK'] = $ret;
             $result_user = $user_table->where($condition)->find();
@@ -43,7 +46,13 @@ class AccountController extends Controller {
         }
     }
 
-    //http://localhost:8001/Museum/index.php/TOURIST/Account/login?username=test_user&password=147258
+    /**
+     * user login
+     * http://localhost:8001/Museum/index.php/TOURIST/Account/login?username=test_user&password=147258
+     * @param string $username:	必须
+     * @param string $password:	必须
+     * @return	返回用户全部信息
+     */
     public function login($username = null, $password = null){
         if(IS_GET){
             $user_table = M('normal_visiter');
@@ -73,14 +82,17 @@ class AccountController extends Controller {
             );
             session('user', $auth);
             echo JSON($normal_user);
-//             $this->success($normal_user['uid']);
         }
         else{
             $this->error('请求方式错误！');
         }
     }
 
-    //http://localhost:89/Museum/Home/Account/logout
+    /**
+     * log out
+     * http://localhost8001/museum/index.php/TOURIST/Account/logout
+     */
+    
     public function logout() {
         if(is_login()){
             session('user', null);

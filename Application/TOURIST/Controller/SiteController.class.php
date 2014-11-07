@@ -7,22 +7,23 @@ class SiteController extends Controller {
     }
 
     /**
-     * return museum information page needs
-     * http://localhost:8001/Museum/index.php/TOURIST/Site/siteDetails?vs_id=1
-     * @param vs_id: 场馆ID
+     * 返回博物馆简略信息(开放时间, 门票, 地址, 简介)
+     * http://localhost:8001/Museum/index.php/TOURIST/Site/siteDetails?site_id=1
+     * @param int site_id: 场馆ID
      * */
-    public function siteDetails($vs_id){
+    public function siteDetails($site_id){
     	if(IS_GET) {
     		$site_table = M(_TBL_VISIT_SITE_);
-    		$condition['VS_ID_INT_PK'] = $vs_id;
+    		$condition['VS_ID_INT_PK'] = $site_id;
     		$site = $site_table->where($condition)->find();
-    		 
-    		$result['introduction'] = $site['VS_DESCRIPTION_TX'];
-    		$result['open_time'] = $site['VS_OPEN_TIME_TX'];
-    		$result['price'] = $site['VS_PRICE_TX'];
-    		echo JSON($result);
+    		
+    		$data['site_open_time'] = $site['VS_OPEN_TIME_TX'];
+    		$data['site_price'] = $site['VS_PRICE_TX'];
+    		$data['site_address'] = $site['VS_ADDRESS_TX'];
+    		$data['site_introduction'] = $site['VS_DESCRIPTION_TX'];
+    		echo JSON($data);
     	}
-    	return JSON($result);
+    	return JSON($data);
     }
     
     

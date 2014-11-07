@@ -55,17 +55,114 @@ class ItemController extends Controller {
     }
     
     /**
-     * return all the items that belongs to one tree node
-     * @param vs_id:场馆ID
-     * @param tree_id:树节点ID,null表示搜索场馆全部item
+     * 返回从某一层次开始的所有展品列表(名称,简介,缩略图)
+     * tree_id为空时，搜索展馆全部展品
+     * tree_id非空时，搜索tree node以下的所有展品
+     * localhost:8001/museum/index.php/TOURIST/Item/getItems?site_id=1&tree_id=1
+     * @param $site_id:场馆ID
+     * @param $tree_id:树节点ID(层次),null表示搜索场馆全部item
      */
-    public function getItems($vs_id,$tree_id=null) {
+    public function getItems($site_id=null,$tree_id=null) {
     	//TODO:返回展品命，备注，图片
+    	if($site_id == null && $tree_id == null) {
+    		echo 'site_id&tree_id can\'t be both null!';
+    		return;
+    	}
+    	if($site_id != null && $tree_id == null) {
+    		$tree_table = M(_TBL_SITE_TREE_);
+    		$condition['ST_VS_ID_INT_FK'] = $site_id;
+	    	$condition['ST_PARENT_ID_INT_FK'] = array('exp','is NULL');
+	    	$roots = $tree_table->field('ST_ID_INT_PK')->where($condition)->select();
+	    	$result = array();
+	    	foreach ($roots as $root) {
+	    		$temp = $this->getAllNodes($root['ST_ID_INT_PK']);
+	    		$result = array_merge($result, $temp);
+	    	}
+	    	$to_search = array_values(array_unique($result));
+    	}
+    	
+    	if ($tree_id != null) {
+    		$to_search = $this->getAllNodes($tree_id);
+    	}
+		
+    	
+    	$item_table = M(_TBL_ITEM_);
+    	$condition_item['IT_ST_ID_INT_FK'] = array('IN',$to_search);
+    	$items = $item_table->field(array('IT_ID_INT_PK','IT_NAME_TX','IT_DESCRIPTION_TX','IT_MPIC_PATH_TX'))->
+    		where($condition_item)->select();
+    	for ($i = 0; $i < count($items); $i++) {
+    		$data[$i]['item_id'] = $items[$i]['IT_ID_INT_PK'];
+    		$data[$i]['item_name'] = $items[$i]['IT_NAME_TX'];
+    		$data[$i]['item_description'] = $items[$i]['IT_DESCRIPTION_TX'];
+    		$data[$i]['item_logo'] = explode("$", $items[$i]['IT_MPIC_PATH_TX']);
+    		$data[$i]['item_base_url'] = getBase()._ITEM_.'ID_'.$data[$i]['item_id'].'/';
+    	}
+    	echo JSON($data);
+    	return ;
+    	
     }
     /**
-     * return the details of one item
+     * 返回展品详细信息(名称, 概述, 图片, 缩略图, 音频, 歌词, 详细信息, 补充信息=>以key_value的形式)
+     * localhost:8001/Museum/index.php/TOURIST/Item/getItemDetails?item_id=1
+     * @param unknown $item_id: 展品ID
      */
-    public function itemDetail($item_id) {
-    	//TODO: return the details of one item
+    public function getItemDetails($item_id) {
+    	if(IS_GET) {
+	    	$item_table = M(_TBL_ITEM_);
+	    	$condition['IT_ID_INT_PK'] = $item_id;
+	    	$item = $item_table->where($condition)->find();
+	    	
+	    	$kv_table = M(_TBL_ITEM_KEY_VALUE_);
+	    	$conditiion_kv[ITKV_IT_ID_INT_FK] = $item_id;
+	    	$item_kvs = $kv_table->field(array('ITKV_KEY_TX_FX', 'ITKV_VALUE_TX'))->where($conditiion_kv)->select();
+	    	
+	    	$data['name'] = $item['IT_NAME_TX'];
+	    	$data['description'] = $item['IT_DESCRIPTION_TX'];
+	    	$data['pic'] = explode("$", $item['IT_PIC_PATH_TX']);
+	    	$data['logo'] = $item['IT_MPIC_PATH_TX'];
+	    	$data['audio'] = $item['IT_AUDIO_PATH_TX'];
+	    	$data['lyrics'] = $item['IT_LYRICS_PATH_TX'];
+	    	$data['details'] = $item['IT_DEATAIL----------------------------S_TX'];
+	    	for ($i = 0; $i < count($item_kvs); $i++) {
+	    		$data['key_'.$i] = $item_kvs[$i]['ITKV_KEY_TX_FX'];
+	    		$data['value_'.$i] = $item_kvs[$i]['ITKV_VALUE_TX'];
+	    	}
+	    	$data['base_url'] = getBase()._ITEM_.'ID_'.$item_id.'/';
+	    	echo JSON($data);
+	    	}
+    }
+
+    
+    /**
+     * get all last nods
+     * @param unknown $node_id
+     * @return NULL
+     */
+    private function getAllNodes($node_id) {
+    	$tree_node['level_id'] = $node_id;
+    	static $result = array();
+    	$this->findRecursiveChildren($tree_node, & $result);
+    	return $result;
+    }
+    
+    /**
+     * the recursive function, searching all last nodes
+     * @param unknown $tree_node : the tree_node
+     */
+    private function findRecursiveChildren($tree_node, $result) {
+    	$tree_table = M(_TBL_SITE_TREE_);
+    	$condition['ST_PARENT_ID_INT_FK'] = $tree_node['level_id'];
+    	$children = $tree_table->field('ST_ID_INT_PK')->where($condition)->select();
+    	if (!$children) {
+    		$result[count($result)] = $tree_node['level_id'];
+    		return;
+    	} else {
+    		for ($i = 0; $i<count($children); $i++) {
+    			$data[$i]['level_id'] = $children[$i]['ST_ID_INT_PK'];
+    			$data[$i]['children'] = null;
+    			$this->findRecursiveChildren(& $data[$i], & $result);
+    		}
+    	}
+    	return;
     }
 }
