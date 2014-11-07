@@ -8,12 +8,12 @@ class SiteController extends Controller {
 
     /**
      * return museum information page needs
+     * http://localhost:8001/Museum/index.php/TOURIST/Site/siteDetails?vs_id=1
      * @param vs_id: 场馆ID
      * */
-    //http://localhost:8001/Museum/index.php/TOURIST/Site/siteIntroduction?vs_id=1
-    public function siteIntroduction($vs_id){
+    public function siteDetails($vs_id){
     	if(IS_GET) {
-    		$site_table = M('visit_site');
+    		$site_table = M(_TBL_VISIT_SITE_);
     		$condition['VS_ID_INT_PK'] = $vs_id;
     		$site = $site_table->where($condition)->find();
     		 
@@ -25,11 +25,6 @@ class SiteController extends Controller {
     	return JSON($result);
     }
     
-    public function museumEvent($vs_id,$state) {
-    	 
-    }
-    
-    
     
     //http://localhost:8001/museum/index.php/TOURIST/Site/scrollImgs?vs_id=1
     public function scrollImgs($vs_id){
@@ -37,7 +32,7 @@ class SiteController extends Controller {
     		//TODO:返回展品图，名称，id
     		$base_url =getServer().'SITE/ID_'.$vs_id;
     		$condition['VS_ID_INT_PK'] = $vs_id;
-    		$site = selectAll('visit_site',$condition);
+    		$site = findInTable(_TBL_VISIT_SITE_,$condition);
     		$imgs = explode("$",$site['VS_PIC_PATH_TX']);
     		$result['base_url'] = $base_url.'/';
     		$result['imgs_array'] = $imgs;
@@ -45,13 +40,8 @@ class SiteController extends Controller {
     	}
     	return JSON($result);
     }
-    
-    //http://localhost:8001/museum/index.php/TOURIST/Home/getStarted
-    public function getStarted(){
-    	$base_url =getServer().'SITE/start.mp3';
-    	echo $base_url;
-    }
    
+    
     public function test() {
     
     	//     	header("content-Type: text/html; charset=Utf-8");

@@ -12,6 +12,26 @@ class HomeController extends Controller {
 	 */
     public function searchSites($province=null,$city=null)  {
     	//TODO: 返回博物馆名，简介
+    	$site_table = M(_TBL_VISIT_SITE_);
+    	if ($province == null && $city == null) {
+    		echo "error, province&city can't be both null";
+    		return;
+    	}
+    	if ($province != null) {
+    		$condition['VS_PROVINCE_TX'] = $province;
+    	}
+    	if ($city != null) {
+    		$condition['VS_CITY_TX'] = $city;
+    	}
+    	$sites = $site_table->where($condition)->select();
+    	$count = count($sites);
+    	for ($i = 0; $i < $nums; $i++) {
+    		$temp["site_id"] = $sites[$i]["VS_ID_INT_PK"];
+    		$temp["site_name"] = $sites[$i]["VS_NAME_TX"];
+    		$temp["site_pics"] = explode("$", $sites[$i]["VS_PIC_PATH_TX"]);
+    		$temp["base_url"] = getBase()._ACTIVITIES_.'/'.'ID_'.$temp["act_id"].'/';
+    		$result[$i] = $temp;
+    	}
     }
     
 }
