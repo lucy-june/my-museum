@@ -7,12 +7,20 @@ class ActivityController extends Controller {
 	}
 	/**
 	 * get activities, events
+	 * @param unknown $vs_id
+	 * @param string $state
+	 * @param string $nums
 	 */
 	public function getActivities($vs_id, $state=null,$nums=null) {
-		 
+		$activity_table = M('activity_event');
+		$condition['AE_VS_ID_INT_FK'] = $vs_id;
+// 		$condition['AE_STATE_TX_FX'] = $state;
+		$activities = $activity_table->where($condition)->select();
+// 		$activities = selectAll('activity_event', $condition);
+		echo JSON(count($activities ));
 	}
 	
-	public function getActivityDetail($event_id) {
+	public function getActivityDetail($activity_id) {
 		
 	}
 	
