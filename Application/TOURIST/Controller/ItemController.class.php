@@ -141,7 +141,7 @@ class ItemController extends Controller {
     private function getAllNodes($node_id) {
     	$tree_node['level_id'] = $node_id;
     	static $result = array();
-    	$this->findRecursiveChildren($tree_node, & $result);
+    	$this->findRecursiveChildren($tree_node, $result);
     	return $result;
     }
     
@@ -149,7 +149,7 @@ class ItemController extends Controller {
      * the recursive function, searching all last nodes
      * @param unknown $tree_node : the tree_node
      */
-    private function findRecursiveChildren($tree_node, $result) {
+    private function findRecursiveChildren(& $tree_node, & $result) {
     	$tree_table = M(_TBL_SITE_TREE_);
     	$condition['ST_PARENT_ID_INT_FK'] = $tree_node['level_id'];
     	$children = $tree_table->field('ST_ID_INT_PK')->where($condition)->select();
@@ -160,7 +160,7 @@ class ItemController extends Controller {
     		for ($i = 0; $i<count($children); $i++) {
     			$data[$i]['level_id'] = $children[$i]['ST_ID_INT_PK'];
     			$data[$i]['children'] = null;
-    			$this->findRecursiveChildren(& $data[$i], & $result);
+    			$this->findRecursiveChildren($data[$i], & $result);
     		}
     	}
     	return;

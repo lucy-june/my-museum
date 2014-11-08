@@ -96,7 +96,7 @@ function urlContent($base,$path,$file){
 }
 
 function getBase(){
-    $base='ftp://admin:app123@202.120.61.44:21/ftp/Museum/Ftp/';
+    $base='http://202.120.61.44/museum/Ftp/';
     return $base;
 }
 

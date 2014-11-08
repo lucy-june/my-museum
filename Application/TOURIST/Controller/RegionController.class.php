@@ -24,7 +24,7 @@ class RegionController extends Controller {
 	    		$data[$i]['level_count'] = 0;
 	    		$data[$i]['level_id'] = $roots[$i]['ST_ID_INT_PK'];
 	    		$data[$i]['children'] = null;
-	    		$this->findRecursiveChildren(& $data[$i]);
+	    		$this->findRecursiveChildren($data[$i]);
 	    	}
 	    	echo JSON($data);
     	}
@@ -58,7 +58,7 @@ class RegionController extends Controller {
      * the recursive function for completing the structure tree
      * @param unknown $tree_node : the tree_node
      */
-    private function findRecursiveChildren($tree_node) {
+    private function findRecursiveChildren(& $tree_node) {
     	$tree_table = M(_TBL_SITE_TREE_);
     	$condition['ST_PARENT_ID_INT_FK'] = $tree_node['level_id'];
     	$children = $tree_table->where($condition)->select();
@@ -70,7 +70,7 @@ class RegionController extends Controller {
     			$data[$i]['level_count'] = $tree_node['level_count'] + 1;
     			$data[$i]['level_id'] = $children[$i]['ST_ID_INT_PK'];
     			$data[$i]['children'] = null;
-    			$this->findRecursiveChildren(& $data[$i]);
+    			$this->findRecursiveChildren($data[$i]);
     		}
     	}
     	$tree_node['children'] = $data;

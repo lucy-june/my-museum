@@ -47,7 +47,7 @@ class AccountController extends Controller {
     }
 
     /**
-     * user login
+     * 登录
      * http://localhost:8001/Museum/index.php/TOURIST/Account/login?username=test_user&password=147258
      * @param string $username:	必须
      * @param string $password:	必须
@@ -92,7 +92,6 @@ class AccountController extends Controller {
      * log out
      * http://localhost8001/museum/index.php/TOURIST/Account/logout
      */
-    
     public function logout() {
         if(is_login()){
             session('user', null);
