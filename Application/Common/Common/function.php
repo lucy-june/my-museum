@@ -110,6 +110,16 @@ function findInTable($tableName, $condition) {
 	$db = M($tableName);
 	return $db->where($condition)->find();
 }
-
+/**
+ * for a simple array, add prefix and sufix to each of the elementss
+ * @param unknown $inputArray
+ * @param unknown $prefix
+ * @param unknown $sufix
+ */
+function arrayPreSufix(& $inputArray, $prefix, $sufix) {
+	for($i = 0; $i < count($inputArray); $i++) {
+		$inputArray[$i]= $prefix.$inputArray[$i].$sufix;
+	}
+}
 
 ?>

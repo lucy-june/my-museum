@@ -88,14 +88,21 @@ class ItemController extends Controller {
     	
     	$item_table = M(_TBL_ITEM_);
     	$condition_item['IT_ST_ID_INT_FK'] = array('IN',$to_search);
-    	$items = $item_table->field(array('IT_ID_INT_PK','IT_NAME_TX','IT_DESCRIPTION_TX','IT_MPIC_PATH_TX'))->
+    	$items = $item_table->field(array('IT_ID_INT_PK','IT_NAME_TX','IT_DESCRIPTION_TX','IT_MPIC_PATH_TX','IT_AUDIO_PATH_TX'
+    	,'IT_LYRICS_PATH_TX'))->
     		where($condition_item)->select();
     	for ($i = 0; $i < count($items); $i++) {
+    		$base_url = getBase()._ITEM_.'ID_'.$items[$i]['IT_ID_INT_PK'].'/';
+    		$local_url = './Ftp/'._ITEM_.'ID_'.$items[$i]['IT_ID_INT_PK'].'/';
     		$data[$i]['item_id'] = $items[$i]['IT_ID_INT_PK'];
     		$data[$i]['item_name'] = $items[$i]['IT_NAME_TX'];
-    		$data[$i]['item_description'] = $items[$i]['IT_DESCRIPTION_TX'];
-    		$data[$i]['item_logo'] = explode("$", $items[$i]['IT_MPIC_PATH_TX']);
-    		$data[$i]['item_base_url'] = getBase()._ITEM_.'ID_'.$data[$i]['item_id'].'/';
+    		$data[$i]['textType'] = $items[$i]['IT_DESCRIPTION_TX'];
+    		$data[$i]['img_url'] = $base_url.$items[$i]['IT_MPIC_PATH_TX'];
+    		$data[$i]['voice_url'] = $base_url.$items[$i]['IT_AUDIO_PATH_TX'];
+    		$voice_file = new \Org\Util\mp3file($local_url.$items[$i]['IT_AUDIO_PATH_TX']);
+    		$voice_info = $voice_file->get_metadata();
+    		$data[$i]['voice_time'] = $voice_info['Length mm:ss'] ? $voice_info['Length mm:ss']:0;
+    		$data[$i]['lrc_url'] = $base_url.$items[$i]['IT_LYRICS_PATH_TX'];
     	}
     	echo JSON($data);
     	return ;
@@ -112,22 +119,28 @@ class ItemController extends Controller {
 	    	$condition['IT_ID_INT_PK'] = $item_id;
 	    	$item = $item_table->where($condition)->find();
 	    	
+	    	$base_url = getBase()._ITEM_.'ID_'.$item['IT_ID_INT_PK'].'/';
+	    	$local_url = './Ftp/'._ITEM_.'ID_'.$item['IT_ID_INT_PK'].'/';
 	    	$kv_table = M(_TBL_ITEM_KEY_VALUE_);
 	    	$conditiion_kv[ITKV_IT_ID_INT_FK] = $item_id;
 	    	$item_kvs = $kv_table->field(array('ITKV_KEY_TX_FX', 'ITKV_VALUE_TX'))->where($conditiion_kv)->select();
 	    	
+	    	$data['item_id'] = $item_id;
 	    	$data['name'] = $item['IT_NAME_TX'];
-	    	$data['description'] = $item['IT_DESCRIPTION_TX'];
-	    	$data['pic'] = explode("$", $item['IT_PIC_PATH_TX']);
-	    	$data['logo'] = $item['IT_MPIC_PATH_TX'];
-	    	$data['audio'] = $item['IT_AUDIO_PATH_TX'];
-	    	$data['lyrics'] = $item['IT_LYRICS_PATH_TX'];
-	    	$data['details'] = $item['IT_DEATAIL----------------------------S_TX'];
+	    	$data['textType'] = $item['IT_DESCRIPTION_TX'];
+	    	$data['image_url'] = explode("$", $item['IT_PIC_PATH_TX']);
+	    	arrayPreSufix($data['image_url'], $base_url, null);
+	    	$data['logo_url'] = $base_url.$item['IT_MPIC_PATH_TX'];
+	    	$data['voice_url'] = $base_url.$item['IT_AUDIO_PATH_TX'];
+	    	$data['lrc_url'] = $base_url.$item['IT_LYRICS_PATH_TX'];
+	    	$data['detail_author'] = $item['IT_AUTHOR_TX'];
+	    	$data['detail_time'] = $item['IT_DECADE'];
+	    	$data['detail_shape'] = $item['IT_PHYSICS_INFO_TX'];
+	    	$data['detail_content'] = $item['IT_DEATAILS_TX'];
 	    	for ($i = 0; $i < count($item_kvs); $i++) {
 	    		$data['key_'.$i] = $item_kvs[$i]['ITKV_KEY_TX_FX'];
 	    		$data['value_'.$i] = $item_kvs[$i]['ITKV_VALUE_TX'];
 	    	}
-	    	$data['base_url'] = getBase()._ITEM_.'ID_'.$item_id.'/';
 	    	echo JSON($data);
 	    	}
     }
@@ -160,7 +173,7 @@ class ItemController extends Controller {
     		for ($i = 0; $i<count($children); $i++) {
     			$data[$i]['level_id'] = $children[$i]['ST_ID_INT_PK'];
     			$data[$i]['children'] = null;
-    			$this->findRecursiveChildren($data[$i], & $result);
+    			$this->findRecursiveChildren($data[$i], $result);
     		}
     	}
     	return;
