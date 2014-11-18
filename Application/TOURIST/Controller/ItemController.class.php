@@ -110,7 +110,7 @@ class ItemController extends Controller {
     }
     /**
      * 返回展品详细信息(名称, 概述, 图片, 缩略图, 音频, 歌词, 详细信息, 补充信息=>以key_value的形式)
-     * localhost:8001/Museum/index.php/TOURIST/Item/getItemDetails?item_id=1
+     * localhost:8001/museum/index.php/TOURIST/Item/getItemDetails?item_id=1
      * @param unknown $item_id: 展品ID
      */
     public function getItemDetails($item_id) {

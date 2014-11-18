@@ -29,9 +29,11 @@ class HomeController extends Controller {
 	    	$count = count($sites);
 	    	for ($i = 0; $i < $count; $i++) {
 	    		$temp["site_id"] = $sites[$i]["VS_ID_INT_PK"];
+	    		$base_url = getBase()._SITE_.'/'.'ID_'.$temp["site_id"].'/';
 	    		$temp["site_name"] = $sites[$i]["VS_NAME_TX"];
 	    		$temp["site_pics"] = explode("$", $sites[$i]["VS_PIC_PATH_TX"]);
-	    		$temp["base_url"] = getBase()._SITE_.'/'.'ID_'.$temp["site_id"].'/';
+	    		arrayPreSufix($temp["site_pics"], $base_url, null);
+	    		$temp["site_logo"] = $base_url.$sites[$i]["VS_LOGO_PATH_TX"];
 	    		$result[$i] = $temp;
 	    	}
 	    	echo JSON($result);
