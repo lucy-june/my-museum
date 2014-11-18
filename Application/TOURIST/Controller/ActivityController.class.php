@@ -7,7 +7,7 @@ class ActivityController extends Controller {
 	}
 	/**
 	 * 返回场馆的全部活动列表(ID,名称,图片列表)
-	 * localhost:8001/museum/index.php/TOURIST/Activity/getActivities?vs_id=1
+	 * localhost:8001/museum/index.php/TOURIST/Activity/getActivities?site_id=1
 	 * @param int $site_id:		场馆ID	
 	 * @param string $state:	活动状态（"NST"=>未开始, "ING"=>进行中, "FIN"=>已结束）
 	 * @param string $nums:		需要获取的活动个数
@@ -29,10 +29,13 @@ class ActivityController extends Controller {
 				$nums = $count;
 			}
 	 		for ($i = 0; $i < $nums; $i++) {
+	 			 
 	 			$temp["act_id"] = $activities[$i]["AE_ID_INT_PK"];
 	 			$temp["act_name"] = $activities[$i]["AE_NAME_TX"];
+	 			$base_url = getBase()._ACTIVITIES_.'ID_'.$temp["act_id"].'/';
 	 			$temp["act_pics"] = explode("$", $activities[$i]["AE_PIC_PATH_TX"]);
-	 			$temp["act_base_url"] = getBase()._ACTIVITIES_.'ID_'.$temp["act_id"].'/';
+	 			arrayPreSufix($temp["act_pics"], $base_url, null);
+	 			
 	 			$result[$i] = $temp;
 	 		}
 			

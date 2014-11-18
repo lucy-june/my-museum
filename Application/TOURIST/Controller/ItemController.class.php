@@ -101,7 +101,7 @@ class ItemController extends Controller {
     		$data[$i]['voice_url'] = $base_url.$items[$i]['IT_AUDIO_PATH_TX'];
     		$voice_file = new \Org\Util\mp3file($local_url.$items[$i]['IT_AUDIO_PATH_TX']);
     		$voice_info = $voice_file->get_metadata();
-    		$data[$i]['voice_time'] = $voice_info['Length mm:ss'] ? $voice_info['Length mm:ss']:0;
+    		$data[$i]['voice_time'] = ($voice_info['Length'] ? $voice_info['Length']:0)*1000;
     		$data[$i]['lrc_url'] = $base_url.$items[$i]['IT_LYRICS_PATH_TX'];
     	}
     	echo JSON($data);
@@ -134,7 +134,7 @@ class ItemController extends Controller {
 	    	$data['voice_url'] = $base_url.$item['IT_AUDIO_PATH_TX'];
 	    	$data['lrc_url'] = $base_url.$item['IT_LYRICS_PATH_TX'];
 	    	$data['detail_author'] = $item['IT_AUTHOR_TX'];
-	    	$data['detail_time'] = $item['IT_DECADE'];
+	    	$data['detail_time'] = $item['IT_DECADE_TX'];
 	    	$data['detail_shape'] = $item['IT_PHYSICS_INFO_TX'];
 	    	$data['detail_content'] = $item['IT_DEATAILS_TX'];
 	    	for ($i = 0; $i < count($item_kvs); $i++) {
