@@ -11,7 +11,7 @@ define('_TBL_SITE_ADMIN_', 'site_admin');
 define('_TBL_VISIT_SITE_', 'visit_site');
 define('_TBL_SITE_TREE_', 'site_tree');
 define('_TBL_ITEM_KEY_VALUE_', 'item_key_value');
-
+define('_TBL_CITY_', 'province_city');
 
 return array(
 		
