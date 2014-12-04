@@ -7,7 +7,8 @@ class CollectionController extends Controller {
     }
 
     //http://localhost:89/Museum/Home/Collection/myCollection?uid=2
-    public function myCollection($uid){
+    public function getMyCollections($uid){
+    	
     }
 
     //http://localhost:89/Museum/Home/Collection/myCollectionDetail?uid=2

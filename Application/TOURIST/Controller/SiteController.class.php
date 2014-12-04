@@ -26,6 +26,48 @@ class SiteController extends Controller {
     	return JSON($data);
     }
     
+
+
+    /**
+     * 返回博物馆简略信息+活动信息(开放时间, 门票, 地址, 简介，活动信息)
+     * http://localhost:8001/Museum/index.php/TOURIST/Site/siteDetails?site_id=1
+     * @param int site_id: 场馆ID
+     * */
+    public function siteDetailsFull($site_id){
+        if(IS_GET) {
+            $site_table = M(_TBL_VISIT_SITE_);
+            $condition['VS_ID_INT_PK'] = $site_id;
+            $site = $site_table->where($condition)->find();
+            
+            $data['site_open_time'] = $site['VS_OPEN_TIME_TX'];
+            $data['site_price'] = $site['VS_PRICE_TX'];
+            $data['site_address'] = $site['VS_ADDRESS_TX'];
+            $data['site_introduction'] = $site['VS_DESCRIPTION_TX'];
+            /*get activities*/
+            $activity_table = M('activity_event');
+            $condition_activities['AE_VS_ID_INT_FK'] = $site_id;
+            $condition_activities['AE_STATE_TX_FX'] = 'NST';
+            $activities = $activity_table->field($field)->where($condition_activities)->order('AE_TIME_START_TIMESTAMP desc')->select();
+            for ($i = 0; $i < count($activities); $i++) {
+                 
+                $temp["act_id"] = $activities[$i]["AE_ID_INT_PK"];
+                $temp["act_name"] = $activities[$i]["AE_NAME_TX"];
+                $base_url = getBase()._ACTIVITIES_.'ID_'.$temp["act_id"].'/';
+                $temp["act_pics"] = explode("$", $activities[$i]["AE_PIC_PATH_TX"]);
+                arrayPreSufix($temp["act_pics"], $base_url, null);
+                
+                $result[$i] = $temp;
+            }
+
+            $data['site_activities'] = $result;
+
+            echo JSON($data);
+        }
+        return JSON($data);
+    }
+    
+
+
     
     //http://localhost:8001/museum/index.php/TOURIST/Site/scrollImgs?vs_id=1
     public function scrollImgs($vs_id){
