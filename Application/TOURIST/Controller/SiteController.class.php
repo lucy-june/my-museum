@@ -53,8 +53,10 @@ class SiteController extends Controller {
                 $temp["act_id"] = $activities[$i]["AE_ID_INT_PK"];
                 $temp["act_name"] = $activities[$i]["AE_NAME_TX"];
                 $base_url = getBase()._ACTIVITIES_.'ID_'.$temp["act_id"].'/';
-                $temp["act_pics"] = explode("$", $activities[$i]["AE_PIC_PATH_TX"]);
-                arrayPreSufix($temp["act_pics"], $base_url, null);
+                $act_pics = explode("$", $activities[$i]["AE_PIC_PATH_TX"]);
+                arrayPreSufix($act_pics, $base_url, null);
+                $temp["act_pics"] = $act_pics[0];
+                
                 
                 $result[$i] = $temp;
             }
