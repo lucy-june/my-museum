@@ -14,7 +14,11 @@ define('_TBL_ITEM_KEY_VALUE_', 'item_key_value');
 define('_TBL_CITY_', 'province_city');
 define('_TBL_SITE_QUESTION_', 'site_question');
 define('_TBL_FEEDBACK_QUESTION_', 'feedback_question');
+define('_TBL_REL_ITEM_VISITER', 'rel_nv_it');
 
+/*define status*/
+define('_STATE_ACT_', 'ACT');
+define('_STATE_DEL_', 'DEL');
 return array(
 		
 		

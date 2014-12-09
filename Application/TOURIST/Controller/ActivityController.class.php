@@ -15,7 +15,7 @@ class ActivityController extends Controller {
 	 */
 	public function getActivities($site_id, $state=null,$nums=null) {
 		if(IS_GET) {
-			$activity_table = M('activity_event');
+			$activity_table = M(_TBL_ACTIVITY_);
 			$condition['AE_VS_ID_INT_FK'] = $site_id;
 			$field = array('AE_ID_INT_PK','AE_NAME_TX','AE_PIC_PATH_TX');
 	 		if ($state != null ) {

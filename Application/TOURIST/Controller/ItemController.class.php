@@ -89,8 +89,7 @@ class ItemController extends Controller {
     	$item_table = M(_TBL_ITEM_);
     	$condition_item['IT_ST_ID_INT_FK'] = array('IN',$to_search);
     	$items = $item_table->field(array('IT_ID_INT_PK','IT_NAME_TX','IT_DESCRIPTION_TX','IT_MPIC_PATH_TX','IT_AUDIO_PATH_TX'
-    	,'IT_LYRICS_PATH_TX'))->
-    		where($condition_item)->select();
+    				,'IT_LYRICS_PATH_TX'))->where($condition_item)->select();
     	for ($i = 0; $i < count($items); $i++) {
     		$base_url = getBase()._ITEM_.'ID_'.$items[$i]['IT_ID_INT_PK'].'/';
     		$local_url = './Ftp/'._ITEM_.'ID_'.$items[$i]['IT_ID_INT_PK'].'/';
